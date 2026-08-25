@@ -12,6 +12,15 @@ npm install
 npm run dev      # http://localhost:5173
 ```
 
+## Deployment
+
+Live at **https://oracle-ten-sand.vercel.app** — Vercel builds from this repo
+and redeploys on every push to `main`. Nothing else to run.
+
+Note the layout: the project lives in a `the_ai_oracle/` subfolder rather than
+at the repository root, and Vercel's Root Directory is set to match. Keep it
+that way, or change both together.
+
 | Script | What it does |
 | --- | --- |
 | `npm run dev` | Dev server with HMR |
