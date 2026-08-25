@@ -1,0 +1,21 @@
+.shuffle {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.shuffle-card {
+  --card-h: calc(var(--card-w) * var(--card-ratio));
+  --card-radius: calc(var(--card-w) * 0.06);
+
+  position: absolute;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: 0 24px 46px -20px rgb(4 4 14 / 0.9);
+  will-change: transform;
+}

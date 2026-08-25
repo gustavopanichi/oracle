@@ -1,0 +1,70 @@
+.chrome {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: calc(var(--frame-inset) + clamp(0.7rem, 1.8vh, 1.3rem)) calc(var(--frame-inset) + clamp(0.9rem, 2.4vw, 2rem));
+  pointer-events: none;
+}
+
+.chrome-slot {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.chrome-slot--end { justify-content: flex-end; }
+
+.chrome-slot > * { pointer-events: auto; }
+
+/* The title, carried through from the landing at reading scale. */
+.chrome-wordmark {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 0.85rem + 0.6vw, 1.6rem);
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2em 0.4em;
+  transition: color 0.4s var(--ease-out-soft);
+}
+
+@media (hover: hover) {
+  .chrome-wordmark:hover { color: var(--text); }
+}
+
+.sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.55em 0.9em;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.35s var(--ease-out-soft), border-color 0.35s var(--ease-out-soft);
+}
+
+.sound-toggle:focus-visible { color: var(--highlight); border-color: var(--highlight-ghost); }
+
+@media (hover: hover) {
+  .sound-toggle:hover { color: var(--highlight); border-color: var(--highlight-ghost); }
+}
+
+.sound-toggle svg { width: 1.15rem; height: 1.15rem; }
+
+.sound-toggle-label {
+  font-family: var(--font-body);
+  font-size: calc(var(--meta-size) * 0.88);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .sound-toggle-label { display: none; }
+}

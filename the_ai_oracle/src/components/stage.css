@@ -1,0 +1,176 @@
+.stage {
+  position: relative;
+  transition: --card-w 1.1s var(--ease-out-soft);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  /* Top padding clears the chrome — the wordmark now sits on the centre line,
+     directly above the cards, so it needs real room rather than a corner. */
+  padding: var(--stage-pad-top) var(--gutter) var(--stage-pad-bottom);
+}
+
+/* Once the three cards are read, the spread draws in — the room it gives up
+   is what the reading needs. */
+.stage.is-complete { --card-w: calc(var(--card-w-base) * var(--card-converged)); }
+
+/* --- Table --------------------------------------------------------------- */
+.table {
+  position: relative;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.table-deck {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.table-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(1.1rem, 3.4vw, 3.6rem);
+  transition: gap 1.1s var(--ease-out-soft);
+}
+
+/* The three cards drift together once the reading is complete — the spread
+   stops being three separate draws and becomes one sentence. */
+.table.is-converged .table-row { gap: clamp(0.6rem, 1.6vw, 1.8rem); }
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--column-gap);
+  width: var(--card-w);
+}
+
+/* Positioned and lifted: .card-slot above it is positioned, so without this
+   the card paints over the help tooltip no matter what z-index the tooltip
+   itself carries. */
+.column-label {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* The card's own line sits here rather than on the card. Fixed height so the
+   swap from question to prompt never nudges the layout. */
+/* Deep enough for the longest prompt in the deck at three lines, so the
+   question-to-prompt swap never pushes the reading below it. */
+.column-line {
+  position: relative;
+  min-height: var(--prompt-line);
+}
+
+.column-line-text {
+  position: absolute;
+  inset: 0;
+  font-size: clamp(0.8rem, 0.74rem + 0.2vw, 0.94rem);
+  line-height: 1.45;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+/* --- Foot: the reading --------------------------------------------------- */
+.stage-foot {
+  position: relative;
+  width: 100%;
+  min-height: clamp(4rem, 9vh, 5.5rem);
+  margin-top: var(--foot-margin);
+  transition: min-height 0.9s var(--ease-out-soft);
+}
+
+/* The foot only claims the room the verdict needs, and only once it is there. */
+.stage.is-complete .stage-foot {
+  /* Fixed, not viewport-scaled: the reading's height comes from type with rem
+     floors, so it stays about this tall on every screen. Scaling this with vh
+     let it spill over the frame on short displays. */
+  min-height: var(--foot-reserve);
+  margin-top: var(--foot-margin);
+}
+
+.summary {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.65rem, 1.5vh, 1.05rem);
+  text-align: center;
+}
+
+.summary-eyebrow { color: var(--highlight); }
+
+.summary-formula {
+  /* One line, always. Three long titles plus their separators run to about
+     39em of this face, so the size is taken from the viewport rather than
+     capped in rem — that is what keeps the longest combination in the deck
+     from wrapping. */
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.4em;
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: min(2.4vw, 2.6rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.summary-formula em {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 0.5em;
+  color: var(--highlight);
+  transform: translateY(-0.2em);
+}
+
+.summary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.4vw, 1.1rem);
+  margin-top: clamp(0.2rem, 1vh, 0.7rem);
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+@media (max-width: 760px) {
+  :root { --card-w-base: min(58vw, 15.5rem); }
+
+  .stage { justify-content: flex-start; padding-top: clamp(5rem, 12vh, 7rem); }
+
+  .table-row {
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(2rem, 5vh, 2.8rem) !important;
+  }
+
+  .column-line { min-height: auto; }
+  .column-line-text { position: static; }
+
+  .summary-formula {
+    flex-wrap: wrap;
+    white-space: normal;
+    font-size: clamp(1.3rem, 6.4vw, 2rem);
+    max-width: 18em;
+    text-wrap: balance;
+  }
+  .stage-foot, .stage.is-complete .stage-foot { min-height: auto; }
+  .summary { position: static; }
+}

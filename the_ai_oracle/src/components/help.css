@@ -1,0 +1,138 @@
+.help {
+  position: relative;
+  display: inline-flex;
+  vertical-align: baseline;
+  margin-left: 0.4em;
+}
+
+.help-dot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35em;
+  height: 1.35em;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--highlight) 40%, transparent);
+  color: var(--highlight);
+  font-family: var(--font-body);
+  font-size: 0.82em;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(0.05em);
+  transition: color 0.3s var(--ease-out-soft), border-color 0.3s var(--ease-out-soft),
+    background-color 0.3s var(--ease-out-soft);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The dot is small by design; this gives it a finger-sized target without
+   changing how big it looks. */
+.help-dot::before {
+  content: '';
+  position: absolute;
+  inset: -13px;
+}
+
+.help-dot:focus-visible,
+.help-dot[aria-expanded='true'] {
+  color: var(--ground);
+  background: var(--highlight);
+  border-color: var(--highlight);
+}
+
+@media (hover: hover) {
+  .help-dot:hover {
+    color: var(--ground);
+    background: var(--highlight);
+    border-color: var(--highlight);
+  }
+}
+
+/* Opens upward over the card, so it never lengthens the page or pushes the
+   reading below the frame. */
+.help-tip {
+  position: absolute;
+  bottom: calc(100% + 0.85em);
+  left: 50%;
+  z-index: 35;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  width: max-content;
+  max-width: min(24rem, 74vw);
+  padding: 1.1em 1.25em;
+  text-align: left;
+  border: 1px solid color-mix(in oklab, var(--highlight) 30%, transparent);
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--ground-deep) 88%, black);
+  box-shadow: 0 24px 60px -18px rgb(3 3 10 / 0.95);
+  backdrop-filter: blur(6px);
+  cursor: default;
+}
+
+/* The pointer. */
+.help-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 9px;
+  height: 9px;
+  rotate: 45deg;
+  border: 1px solid color-mix(in oklab, var(--highlight) 30%, transparent);
+  border-width: 0 1px 1px 0;
+  background: color-mix(in oklab, var(--ground-deep) 88%, black);
+}
+
+.help-tip-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--highlight);
+}
+
+.help-tip-detail {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.help-tip-example {
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-wrap: pretty;
+  padding-top: 0.7em;
+  border-top: 1px solid color-mix(in oklab, var(--highlight) 14%, transparent);
+}
+
+.help-tip-label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--highlight) 62%, var(--ground));
+  margin-bottom: 0.3em;
+}
+
+/* On a phone the card is tall and the prompt sits close under it, so opening
+   upward would run the tooltip off the top of the screen. Below the prompt
+   there is always room, and the column gives it a natural width. */
+@media (max-width: 760px) {
+  .help { position: static; }
+
+  .help-tip {
+    top: calc(100% + 0.9em);
+    bottom: auto;
+    left: 0;
+    right: 0;
+    translate: none;
+    width: auto;
+    max-width: none;
+  }
+
+  .help-tip::after { display: none; }
+}

@@ -1,0 +1,45 @@
+.landing {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 2vh, 2rem);
+  min-height: 100svh;
+  padding: var(--gutter);
+  text-align: center;
+  will-change: transform, opacity, filter;
+}
+
+.landing-mark {
+  width: clamp(6rem, 9vw, 9rem);
+  color: var(--highlight);
+  opacity: 0.85;
+  margin-bottom: clamp(0.5rem, 2vh, 1.6rem);
+}
+
+.landing-mark svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.landing-mark-ring {
+  transform-box: view-box;
+  transform-origin: 60px 34px;
+  animation: landing-turn 34s linear infinite;
+  stroke-dasharray: 2 7;
+}
+
+@keyframes landing-turn { to { transform: rotate(360deg); } }
+
+.landing-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.7rem, 10.5vw, 9rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--text);
+  text-shadow: 0 0 80px color-mix(in oklab, var(--highlight) 22%, transparent);
+  will-change: transform;
+}
+
+.landing-action { margin-top: clamp(1.6rem, 4.5vh, 3.4rem); }

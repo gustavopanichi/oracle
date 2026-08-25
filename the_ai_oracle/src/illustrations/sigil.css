@@ -1,0 +1,139 @@
+/* --------------------------------------------------------------------------
+   Sigil rendering: the shared dial, the ink-drawing reveal, and the small
+   idle behaviours individual sigils opt into by class.
+-------------------------------------------------------------------------- */
+
+.sigil {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: inherit;
+}
+
+.sigil-dial {
+  color: inherit;
+  opacity: 0.2;
+  stroke-width: 0.7;
+}
+
+.sigil-ink {
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* --- Ink drawing --------------------------------------------------------- */
+/* pathLength="1" on every drawable element lets one dash rule drive them all. */
+.sigil.is-drawing :is(path, line, circle, rect, polyline, polygon, ellipse):not([stroke='none']) {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: sigil-ink-in 0.9s var(--ease-out-soft) forwards;
+}
+
+.sigil.is-drawing [fill='currentColor'] {
+  animation: sigil-dot-in 0.5s var(--ease-out-soft) backwards;
+}
+
+@keyframes sigil-ink-in {
+  from { stroke-dashoffset: 1; opacity: 0; }
+  8%   { opacity: 1; }
+  to   { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes sigil-dot-in {
+  from { opacity: 0; transform: scale(0.2); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* --- Idle behaviours ----------------------------------------------------- */
+/* Applied per element inside a sigil. Rotation is about the field's centre,
+   not the element's own box, so orbits stay concentric. */
+.sig-spin,
+.sig-spin-rev,
+.sig-spin-fast {
+  transform-box: view-box;
+  transform-origin: 60px 60px;
+}
+
+.sig-spin { animation: sigil-rotate 42s linear infinite; }
+.sig-spin-rev { animation: sigil-rotate 58s linear infinite reverse; }
+.sig-spin-fast { animation: sigil-rotate 19s linear infinite; }
+
+.sig-pulse { animation: sigil-pulse 5.5s var(--ease-in-out-soft) infinite; }
+.sig-pulse-slow { animation: sigil-pulse 9s var(--ease-in-out-soft) infinite; }
+
+.sig-breathe {
+  transform-box: view-box;
+  transform-origin: 60px 60px;
+  animation: sigil-breathe 7.5s var(--ease-in-out-soft) infinite;
+}
+
+.sig-trace {
+  stroke-dasharray: 0.14 0.86;
+  animation: sigil-trace 11s linear infinite;
+}
+
+@keyframes sigil-rotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sigil-pulse {
+  0%, 100% { opacity: 0.28; }
+  50% { opacity: 0.95; }
+}
+
+@keyframes sigil-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}
+
+@keyframes sigil-trace {
+  to { stroke-dashoffset: -1; }
+}
+
+/* The drawing animation and the idle animation both want the dash properties,
+   so idle traces only start once the ink is in. */
+.sigil.is-drawing .sig-trace { animation-delay: 1.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sigil.is-drawing :is(path, line, circle, rect, polyline, polygon, ellipse) {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .sig-spin, .sig-spin-rev, .sig-spin-fast, .sig-pulse, .sig-pulse-slow,
+  .sig-breathe, .sig-trace { animation: none; }
+  .sig-pulse, .sig-pulse-slow { opacity: 0.7; }
+  .sig-trace { stroke-dasharray: none; }
+}
+
+/* --- Staggered ink cascade (generated) --------------------------------- */
+.sigil.is-drawing .sigil-ink > :nth-child(1), .sigil.is-drawing .sigil-ink g > :nth-child(1) { animation-delay: 0.195s; }
+.sigil.is-drawing .sigil-ink > :nth-child(2), .sigil.is-drawing .sigil-ink g > :nth-child(2) { animation-delay: 0.230s; }
+.sigil.is-drawing .sigil-ink > :nth-child(3), .sigil.is-drawing .sigil-ink g > :nth-child(3) { animation-delay: 0.265s; }
+.sigil.is-drawing .sigil-ink > :nth-child(4), .sigil.is-drawing .sigil-ink g > :nth-child(4) { animation-delay: 0.300s; }
+.sigil.is-drawing .sigil-ink > :nth-child(5), .sigil.is-drawing .sigil-ink g > :nth-child(5) { animation-delay: 0.335s; }
+.sigil.is-drawing .sigil-ink > :nth-child(6), .sigil.is-drawing .sigil-ink g > :nth-child(6) { animation-delay: 0.370s; }
+.sigil.is-drawing .sigil-ink > :nth-child(7), .sigil.is-drawing .sigil-ink g > :nth-child(7) { animation-delay: 0.405s; }
+.sigil.is-drawing .sigil-ink > :nth-child(8), .sigil.is-drawing .sigil-ink g > :nth-child(8) { animation-delay: 0.440s; }
+.sigil.is-drawing .sigil-ink > :nth-child(9), .sigil.is-drawing .sigil-ink g > :nth-child(9) { animation-delay: 0.475s; }
+.sigil.is-drawing .sigil-ink > :nth-child(10), .sigil.is-drawing .sigil-ink g > :nth-child(10) { animation-delay: 0.510s; }
+.sigil.is-drawing .sigil-ink > :nth-child(11), .sigil.is-drawing .sigil-ink g > :nth-child(11) { animation-delay: 0.545s; }
+.sigil.is-drawing .sigil-ink > :nth-child(12), .sigil.is-drawing .sigil-ink g > :nth-child(12) { animation-delay: 0.580s; }
+.sigil.is-drawing .sigil-ink > :nth-child(13), .sigil.is-drawing .sigil-ink g > :nth-child(13) { animation-delay: 0.615s; }
+.sigil.is-drawing .sigil-ink > :nth-child(14), .sigil.is-drawing .sigil-ink g > :nth-child(14) { animation-delay: 0.650s; }
+.sigil.is-drawing .sigil-ink > :nth-child(15), .sigil.is-drawing .sigil-ink g > :nth-child(15) { animation-delay: 0.685s; }
+.sigil.is-drawing .sigil-ink > :nth-child(16), .sigil.is-drawing .sigil-ink g > :nth-child(16) { animation-delay: 0.720s; }
+.sigil.is-drawing .sigil-ink > :nth-child(17), .sigil.is-drawing .sigil-ink g > :nth-child(17) { animation-delay: 0.755s; }
+.sigil.is-drawing .sigil-ink > :nth-child(18), .sigil.is-drawing .sigil-ink g > :nth-child(18) { animation-delay: 0.790s; }
+.sigil.is-drawing .sigil-ink > :nth-child(19), .sigil.is-drawing .sigil-ink g > :nth-child(19) { animation-delay: 0.825s; }
+.sigil.is-drawing .sigil-ink > :nth-child(20), .sigil.is-drawing .sigil-ink g > :nth-child(20) { animation-delay: 0.860s; }
+.sigil.is-drawing .sigil-ink > :nth-child(21), .sigil.is-drawing .sigil-ink g > :nth-child(21) { animation-delay: 0.895s; }
+.sigil.is-drawing .sigil-ink > :nth-child(22), .sigil.is-drawing .sigil-ink g > :nth-child(22) { animation-delay: 0.930s; }
+.sigil.is-drawing .sigil-ink > :nth-child(23), .sigil.is-drawing .sigil-ink g > :nth-child(23) { animation-delay: 0.965s; }
+.sigil.is-drawing .sigil-ink > :nth-child(24), .sigil.is-drawing .sigil-ink g > :nth-child(24) { animation-delay: 1.000s; }
+.sigil.is-drawing .sigil-ink > :nth-child(25), .sigil.is-drawing .sigil-ink g > :nth-child(25) { animation-delay: 1.035s; }
+.sigil.is-drawing .sigil-ink > :nth-child(26), .sigil.is-drawing .sigil-ink g > :nth-child(26) { animation-delay: 1.070s; }
+.sigil.is-drawing .sigil-ink > :nth-child(27), .sigil.is-drawing .sigil-ink g > :nth-child(27) { animation-delay: 1.105s; }
+.sigil.is-drawing .sigil-ink > :nth-child(28), .sigil.is-drawing .sigil-ink g > :nth-child(28) { animation-delay: 1.140s; }
+.sigil.is-drawing .sigil-ink > :nth-child(29), .sigil.is-drawing .sigil-ink g > :nth-child(29) { animation-delay: 1.175s; }
+.sigil.is-drawing .sigil-ink > :nth-child(30), .sigil.is-drawing .sigil-ink g > :nth-child(30) { animation-delay: 1.210s; }

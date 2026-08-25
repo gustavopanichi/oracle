@@ -1,0 +1,94 @@
+/* Registered so the card size can be *animated* rather than snapped: when the
+   reading resolves, the spread contracts to make room for the verdict. */
+@property --card-w {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 14rem;
+}
+
+/* ---------------------------------------------------------------------------
+   THE AI ORACLE — design tokens
+   A midnight-blue silk table, a pale blue light, and cards printed in paper,
+   stone and umber.
+--------------------------------------------------------------------------- */
+:root {
+  /* The cloth — midnight navy lit by an electric blue, nothing paler. */
+  --ground: #161638;
+  --ground-glow: #0077e4;
+  --ground-lift: color-mix(in oklab, #161638 80%, #0077e4);
+  --ground-deep: #0d0d24;
+  --ground-edge: #07071a;
+
+  /* The light falling on it */
+  --highlight: #c0d8ff;
+  --highlight-soft: color-mix(in oklab, var(--highlight) 62%, var(--ground));
+  --highlight-faint: color-mix(in oklab, var(--highlight) 34%, var(--ground));
+  --highlight-ghost: color-mix(in oklab, var(--highlight) 18%, var(--ground));
+
+  /* The cards */
+  --card-paper: #f4f4f0;
+  --card-stone: #858580;
+  --card-umber: #7e5735;
+
+  /* Type on the cloth */
+  --text: #f4f4f0;
+  --text-muted: color-mix(in oklab, var(--highlight) 58%, var(--ground));
+  --text-faint: color-mix(in oklab, var(--highlight) 36%, var(--ground));
+
+  /* Type */
+  --font-display: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype',
+    'Book Antiqua', Georgia, serif;
+  --font-body: 'Inter', 'Helvetica Neue', 'Segoe UI', system-ui, sans-serif;
+
+  /* Labels: uppercase, but never tracked out — kerning stays at zero. */
+  --meta-size: clamp(0.68rem, 0.58rem + 0.3vw, 0.84rem);
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Card geometry — 2:3 tarot proportion, one source of truth */
+  /* --- The height budget --------------------------------------------------
+     Height, not width, constrains this layout: the cards, their prompts and
+     the whole reading have to fit one screen without scrolling, because it is
+     shown on a projector.
+
+     So the card width is not picked — it is solved. Every other thing on the
+     stage is declared once here, the stage consumes these same tokens, and
+     what is left over becomes the card. Change one of these and the cards
+     resize themselves to suit; there is no constant to re-tune. */
+  --stage-pad-top: clamp(5.4rem, 9.5vh, 6.5rem);
+  --stage-pad-bottom: clamp(1.5rem, 4vh, 3rem);
+  --column-gap: clamp(0.85rem, 2vh, 1.4rem);
+  --prompt-line: 4.4rem;
+  --foot-margin: clamp(0.8rem, 2.2vh, 1.8rem);
+  --foot-reserve: 13rem;
+
+  --stage-overhead: calc(
+    var(--stage-pad-top) + var(--column-gap) + var(--prompt-line) +
+    var(--foot-margin) + var(--foot-reserve) + var(--stage-pad-bottom)
+  );
+
+  /* Card height as a multiple of its width, and how far the spread contracts
+     once a reading resolves. The divisor below is their product — the height
+     one unit of card width costs once contracted. Keep the two in step. */
+  --card-ratio: 1.755;
+  --card-converged: 0.88;
+
+  --card-w-base: max(
+    8.5rem,
+    min(27vw, calc((100svh - var(--stage-overhead)) / 1.5444), 30rem)
+  );
+  --card-w: var(--card-w-base);
+
+  /* --card-h and --card-radius are derived from --card-w, so they must be
+     declared on the card elements themselves (see card.css / shuffle.css).
+     Declared here they would resolve once against :root's --card-w and ignore
+     the contraction the stage applies when a reading resolves. */
+
+  /* Layout */
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+
+  /* The frame drawn around the whole experience */
+  --frame-inset: clamp(0.6rem, 1.5vw, 1.75rem);
+}

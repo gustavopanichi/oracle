@@ -1,0 +1,147 @@
+.atmos {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* --- The cloth ----------------------------------------------------------- */
+/* Four overlapping pools of light give the fabric its drape before any
+   texture is laid on top. */
+/* A pool of light in the middle of the table, two off-centre lifts to keep it
+   from looking symmetrical, and the cloth falling away into shadow at the
+   bottom edge. */
+.cloth {
+  position: absolute;
+  inset: 0;
+  background:
+    /* #161638 is the brightest the cloth ever gets — everything else falls
+       away from it, and the electric blue only shows in the folds. */
+    radial-gradient(64% 48% at 50% 42%, var(--ground) 0%, transparent 60%),
+    radial-gradient(
+      50% 36% at 16% 22%,
+      color-mix(in oklab, var(--ground) 70%, var(--ground-deep)) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      46% 34% at 88% 72%,
+      color-mix(in oklab, var(--ground) 62%, var(--ground-deep)) 0%,
+      transparent 56%
+    ),
+    linear-gradient(180deg, transparent 18%, var(--ground-edge) 100%),
+    var(--ground-deep);
+}
+
+/* Two rulings at close angles interfere with each other, so the ridges wander
+   instead of marching — blurred hard, they read as folds rather than stripes. */
+.cloth-folds {
+  position: absolute;
+  inset: -14%;
+  opacity: calc(0.5 + var(--intensity) * 0.12);
+  filter: blur(30px);
+  background:
+    repeating-linear-gradient(
+      102deg,
+      transparent 0 72px,
+      color-mix(in oklab, var(--ground-glow) 17%, transparent) 72px 132px,
+      transparent 132px 214px
+    ),
+    repeating-linear-gradient(
+      87deg,
+      transparent 0 118px,
+      rgb(0 0 0 / 0.2) 118px 190px,
+      transparent 190px 310px
+    );
+}
+
+/* The moving highlight. This is what makes it read as silk and not as felt. */
+.cloth-sheen {
+  position: absolute;
+  inset: -35%;
+  filter: blur(46px);
+  opacity: calc(0.44 + var(--intensity) * 0.2);
+  background: linear-gradient(
+    104deg,
+    transparent 28%,
+    color-mix(in oklab, var(--ground-glow) 13%, transparent) 44%,
+    color-mix(in oklab, var(--ground-glow) 20%, transparent) 50%,
+    color-mix(in oklab, var(--ground-glow) 13%, transparent) 56%,
+    transparent 72%
+  );
+  animation: cloth-sheen 34s var(--ease-in-out-soft) infinite alternate;
+  will-change: transform;
+}
+
+@keyframes cloth-sheen {
+  from { transform: translate3d(-14%, -6%, 0) rotate(-1.5deg); }
+  to { transform: translate3d(14%, 6%, 0) rotate(1.5deg); }
+}
+
+/* The weave itself: two crossed thread directions at the finest useful scale. */
+.cloth-weave {
+  position: absolute;
+  inset: 0;
+  opacity: 0.34;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in oklab, var(--ground-glow) 9%, transparent) 0 1px,
+      transparent 1px 3px
+    ),
+    repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.16) 0 1px, transparent 1px 3px);
+}
+
+/* --- Symbols printed into the cloth -------------------------------------- */
+.atmos-glyphs {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  color: color-mix(in oklab, var(--ground-glow) 34%, var(--ground));
+  will-change: transform;
+}
+
+.atmos-glyphs--far { opacity: calc(0.26 + var(--intensity) * 0.07); }
+.atmos-glyphs--near { opacity: calc(0.32 + var(--intensity) * 0.09); }
+
+.atmos-orbit {
+  transform-box: view-box;
+  transform-origin: 500px 350px;
+  animation: atmos-turn 240s linear infinite;
+}
+
+@keyframes atmos-turn {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Dust in the light --------------------------------------------------- */
+.atmos-motes {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.mote {
+  position: absolute;
+  bottom: -6%;
+  border-radius: 50%;
+  background: var(--highlight);
+  box-shadow: 0 0 6px color-mix(in oklab, var(--highlight) 45%, transparent);
+  animation-name: mote-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes mote-rise {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  14% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { transform: translate3d(var(--drift), -116vh, 0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloth-sheen, .atmos-orbit { animation: none; }
+  .mote { animation: none; opacity: 0.24 !important; bottom: auto; top: 34%; }
+}
