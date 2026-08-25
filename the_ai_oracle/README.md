@@ -151,6 +151,7 @@ logic can be exercised from the console without a test harness.
 | Cloth | `#161638` at its brightest, falling away to `#0D0D24` and `#07071A`; `#0077E4` is the light in the folds and the sheen |
 | Highlight | `#C0D8FF` — linework, labels, the `×` separators, the frame |
 | Cards | `#F4F4F0` paper, `#7E5735` umber linework and titles, `#858580` stone for secondary text |
+| Card back | A printed image, `src/assets/card-back.jpg`, shown on all three cards |
 | Display | Instrument Serif — titles, card type and the reading |
 | Body | Inter Regular, with Bold available for emphasis |
 
