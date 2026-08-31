@@ -20,8 +20,6 @@ interface TarotCardProps {
   /** Turning a face-up card over for a replacement. Absent until the whole
       reading is on the table. */
   onRedraw?: () => void
-  /** Pointer entering or leaving a face-up card, which opens its tooltip. */
-  onHoverChange?: (hovering: boolean) => void
   /** Accessible prompt used while the card is still face down. */
   facedownLabel?: string
   /** Accessible name once the card is face up and can be redrawn. */
@@ -39,13 +37,13 @@ export function TarotCard({
   revealed,
   onReveal,
   onRedraw,
-  onHoverChange,
   facedownLabel,
   faceupLabel,
   className,
 }: TarotCardProps) {
   const reduced = useReducedMotion()
   const [flipping, setFlipping] = useState(false)
+  const [peeking, setPeeking] = useState(false)
   const [burstKey, setBurstKey] = useState(0)
   const revealTimer = useRef<number | undefined>(undefined)
 
@@ -75,7 +73,7 @@ export function TarotCard({
 
   const handleClick = () => {
     if (canRedraw) {
-      onHoverChange?.(false)
+      setPeeking(false)
       onRedraw?.()
       return
     }
@@ -141,13 +139,13 @@ export function TarotCard({
           onPointerMove={onPointerMove}
           onClick={handleClick}
           onPointerEnter={(e) => {
-            if (e.pointerType === 'mouse' && revealed) onHoverChange?.(true)
+            if (e.pointerType === 'mouse' && revealed) setPeeking(true)
           }}
           onPointerLeave={(e) => {
             // One handler: the tilt has to reset whatever the pointer type is,
             // but only a mouse leaving should close the tooltip.
             reset()
-            if (e.pointerType === 'mouse') onHoverChange?.(false)
+            if (e.pointerType === 'mouse') setPeeking(false)
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
@@ -155,8 +153,8 @@ export function TarotCard({
               handleClick()
             }
           }}
-          onFocus={() => { if (revealed) onHoverChange?.(true) }}
-          onBlur={() => onHoverChange?.(false)}
+          onFocus={() => { if (revealed) setPeeking(true) }}
+          onBlur={() => setPeeking(false)}
           role={interactive ? 'button' : undefined}
           tabIndex={interactive ? 0 : undefined}
           aria-label={canRedraw ? faceupLabel : canTurn ? facedownLabel : undefined}
@@ -180,7 +178,7 @@ export function TarotCard({
               </div>
 
               <div className="card-face card-face--front">
-                {card ? <CardFace card={card} drawing={revealed} /> : null}
+                {card ? <CardFace card={card} drawing={revealed} peeking={peeking && revealed} /> : null}
                 <motion.div className="card-glare" style={{ x: glareX, y: glareY, opacity: glareOpacity }} />
               </div>
             </motion.div>

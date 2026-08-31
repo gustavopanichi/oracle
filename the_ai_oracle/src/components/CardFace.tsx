@@ -1,5 +1,5 @@
 import { Sigil, SIGILS } from '../illustrations'
-import { cardNumeral, DECK_BY_ID, type Card } from '../data/cards'
+import { cardLede, cardNumeral, DECK_BY_ID, type Card } from '../data/cards'
 import { ARTWORK } from '../data/artwork'
 import { SketchdeckMark } from './SketchdeckMark'
 
@@ -18,6 +18,8 @@ interface CardFaceProps {
   card: Card
   /** True once this card is face-up, which starts the sigil drawing itself in. */
   drawing: boolean
+  /** Pointer is over the card: the window turns to show what it is asking for. */
+  peeking?: boolean
 }
 
 /**
@@ -25,10 +27,11 @@ interface CardFaceProps {
  * the title on a bar beneath it. The card's one-line prompt is not printed on
  * the card — it sits under it on the table.
  */
-export function CardFace({ card, drawing }: CardFaceProps) {
+export function CardFace({ card, drawing, peeking = false }: CardFaceProps) {
   const Art = SIGILS[card.id]
   const deck = DECK_BY_ID[card.deck]
   const artwork = ARTWORK[card.id]
+  const lede = cardLede(card)
 
   return (
     <div className="card-front" style={{ '--title-scale': titleScale(card.title) } as React.CSSProperties}>
@@ -41,15 +44,36 @@ export function CardFace({ card, drawing }: CardFaceProps) {
           </span>
         </header>
 
-        <figure className={artwork ? 'card-window' : 'card-window card-window--empty'}>
-          {artwork ? (
-            /* Not lazy: only three cards are ever in the DOM, and they are
-               mounted before the deal — so the artwork is decoded well before
-               the card turns, instead of popping in mid-flip. */
-            <img className="card-image" src={artwork} alt="" />
-          ) : (
-            <Sigil drawing={drawing}>{Art ? <Art /> : null}</Sigil>
-          )}
+        {/* The window turns on its own axis, inside the card. The artwork is
+            on one side and what the card is asking for is on the other. */}
+        <figure className={['card-window', peeking ? 'is-peeking' : ''].join(' ').trim()}>
+          <div className="card-window-turn">
+            <div
+              className={[
+                'card-window-face',
+                'card-window-face--art',
+                artwork ? '' : 'card-window--empty',
+              ].join(' ').trim()}
+            >
+              {artwork ? (
+                /* Not lazy: only three cards are ever in the DOM, and they are
+                   mounted before the deal — so the artwork is decoded well
+                   before the card turns, instead of popping in mid-flip. */
+                <img className="card-image" src={artwork} alt="" />
+              ) : (
+                <Sigil drawing={drawing}>{Art ? <Art /> : null}</Sigil>
+              )}
+            </div>
+
+            <div className="card-window-face card-window-face--read">
+              {lede ? <p className="card-read-lede">{lede}</p> : null}
+              <p className="card-read-detail">{card.detail}</p>
+              <p className="card-read-example">
+                <span className="card-read-label">For example</span>
+                {card.example}
+              </p>
+            </div>
+          </div>
         </figure>
 
         <footer className="card-title-bar">
