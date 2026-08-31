@@ -44,7 +44,7 @@ export function Landing({ pointer, onBegin }: LandingProps) {
       </motion.div>
 
       <motion.h1 className="landing-title" variants={rise} style={{ x: titleX, y: titleY }}>
-        The AI Oracle
+        The Deck
       </motion.h1>
 
       <motion.div variants={rise} className="landing-action">

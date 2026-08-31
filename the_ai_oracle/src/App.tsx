@@ -146,7 +146,7 @@ export default function App() {
               onClick={restart}
               aria-label="Return to the start"
             >
-              The AI Oracle
+              The Deck
             </button>
           )}
         </div>

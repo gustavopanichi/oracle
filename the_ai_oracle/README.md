@@ -1,4 +1,4 @@
-# The AI Oracle
+# The Deck
 
 A three-card reading for the SketchDeck AI Hackathon. Draw a **focus**, a
 **goal** and a **twist**; the three together are a starting point for what you
