@@ -12,6 +12,120 @@
   will-change: transform, opacity, filter;
 }
 
+/* --- The sky ---------------------------------------------------------------
+   The landing's own background, sitting above the cloth and below the type.
+   Everything here is transform and opacity only, so it stays on the
+   compositor and does not cost layout. */
+.landing-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.landing-sky-inner {
+  position: absolute;
+  /* Overscanned, so the drift never pulls an edge into view. */
+  inset: -8%;
+  will-change: transform;
+}
+
+.landing-sky-plate,
+.landing-sky-glow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform, opacity;
+}
+
+.landing-sky-plate {
+  animation: sky-drift 52s var(--ease-in-out-soft) infinite alternate;
+}
+
+/* Screened back over itself on a slower, opposite path. The two sets of
+   filaments slide across each other and the overlaps brighten and dim. */
+.landing-sky-glow {
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  animation:
+    sky-counter-drift 71s var(--ease-in-out-soft) infinite alternate,
+    sky-breathe 17s var(--ease-in-out-soft) infinite;
+}
+
+@keyframes sky-drift {
+  from { transform: scale(1.04) translate3d(-1.4%, 0.7%, 0) rotate(-0.5deg); }
+  to { transform: scale(1.13) translate3d(1.4%, -0.9%, 0) rotate(0.5deg); }
+}
+
+@keyframes sky-counter-drift {
+  from { transform: scale(1.16) translate3d(1.1%, -0.6%, 0) rotate(0.7deg); }
+  to { transform: scale(1.06) translate3d(-1.1%, 0.8%, 0) rotate(-0.7deg); }
+}
+
+@keyframes sky-breathe {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.56; }
+}
+
+/* --- Smudge ---------------------------------------------------------------
+   A warped, brightened copy of the same plate, screened back over the sky
+   through a soft window that trails the pointer. Because it is the same
+   image displaced and blurred, moving across it looks like dragging a finger
+   through wet paint rather than shining a torch on it. */
+.landing-sky-smudge {
+  position: absolute;
+  inset: -8%;
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  -webkit-mask-image: radial-gradient(
+    26vmax 26vmax at var(--mx, 50%) var(--my, 50%),
+    #000 0%,
+    rgb(0 0 0 / 0.6) 34%,
+    transparent 68%
+  );
+  mask-image: radial-gradient(
+    26vmax 26vmax at var(--mx, 50%) var(--my, 50%),
+    #000 0%,
+    rgb(0 0 0 / 0.6) 34%,
+    transparent 68%
+  );
+  will-change: mask-position;
+}
+
+.landing-sky-smudge img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Displaced from the plate underneath: blurred, turned, and pushed off
+     centre, so the window never lines up with what it covers. */
+  transform: scale(1.1) rotate(1.6deg) translate3d(1.2%, -1%, 0);
+  filter: blur(7px) saturate(1.5) brightness(1.2);
+}
+
+/* Holds the middle of the frame back so the logotype and the button stay
+   legible over the brightest filaments. */
+.landing-sky-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(58% 46% at 50% 46%, var(--ground-edge) 0%, transparent 72%),
+    linear-gradient(180deg, transparent 55%, color-mix(in oklab, var(--ground-edge) 78%, transparent) 100%);
+  opacity: 0.82;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-sky-plate,
+  .landing-sky-glow { animation: none; }
+  .landing-sky-glow { opacity: 0.34; }
+}
+
 .landing-mark {
   width: clamp(6rem, 9vw, 9rem);
   color: var(--highlight);
