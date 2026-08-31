@@ -355,3 +355,44 @@ export function roman(n: number): string {
 export function cardNumeral(card: Card): string {
   return roman(ALL_CARDS.findIndex((c) => c.id === card.id) + 1)
 }
+
+/* ---------------------------------------------------------------------------
+   Tooltip copy
+--------------------------------------------------------------------------- */
+
+/** Dice coefficient over letter bigrams: 0 = nothing in common, 1 = identical. */
+function similarity(a: string, b: string): number {
+  const bigrams = (s: string) => {
+    const clean = s.toLowerCase().replace(/[^a-z0-9 ]/g, '')
+    const out = new Map<string, number>()
+    for (let i = 0; i < clean.length - 1; i++) {
+      const pair = clean.slice(i, i + 2)
+      out.set(pair, (out.get(pair) ?? 0) + 1)
+    }
+    return out
+  }
+
+  const left = bigrams(a)
+  const right = bigrams(b)
+  if (!left.size || !right.size) return 0
+
+  let shared = 0
+  for (const [pair, count] of left) shared += Math.min(count, right.get(pair) ?? 0)
+
+  const total = [...left.values()].reduce((n, c) => n + c, 0) +
+    [...right.values()].reduce((n, c) => n + c, 0)
+  return (2 * shared) / total
+}
+
+/**
+ * The one-line prompt, shown above the fuller detail in a card's tooltip —
+ * unless the detail already opens by restating it, in which case the detail
+ * says the same thing better and the prompt is dropped rather than echoed.
+ *
+ * Computed rather than flagged per card, so it keeps holding if the copy is
+ * edited later. Today it drops the lede on nine of the forty-two.
+ */
+export function cardLede(card: Card): string | null {
+  const opening = card.detail.split('. ')[0]
+  return similarity(card.prompt, opening) > 0.5 ? null : card.prompt
+}

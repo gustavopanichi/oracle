@@ -163,6 +163,24 @@ a { color: var(--highlight); text-decoration-color: var(--highlight-ghost); text
   padding: 1.2em 3em;
 }
 
+/* Filled: the one action on screen that is offered rather than merely
+   available. Its fill is already there, so hover lifts it instead of
+   sweeping it in like the hollow ones. */
+.btn--solid {
+  --btn-fg: var(--ground);
+  border-color: var(--highlight);
+  background: var(--highlight);
+  transition: background-color 0.4s var(--ease-out-soft), color 0.4s var(--ease-out-soft);
+}
+
+.btn--solid::before { display: none; }
+
+.btn--solid:focus-visible { background: var(--text); border-color: var(--text); color: var(--ground); }
+
+@media (hover: hover) {
+  .btn--solid:hover { background: var(--text); border-color: var(--text); color: var(--ground); }
+}
+
 .btn--quiet {
   --btn-fg: var(--text-muted);
   border-color: transparent;

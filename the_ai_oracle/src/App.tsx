@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { DeckId } from './data/cards'
 import { drawReading, redrawCard, emptyMemory, type Reading } from './lib/draw'
+import { preloadCombinations } from './lib/combinations'
 import { sound } from './lib/sound'
 import { usePointerField } from './hooks/usePointerField'
 import { Atmosphere } from './components/Atmosphere'
@@ -49,6 +50,9 @@ export default function App() {
   const begin = useCallback(() => {
     clearTimers()
     sound.unlock()
+    // ~1.5MB of JSON in its own chunk. Started with the shuffle so it has the
+    // whole deal and at least one card turn to arrive before it is needed.
+    preloadCombinations()
 
     const drawn = drawReading(memory, null)
     setReading(drawn.reading)

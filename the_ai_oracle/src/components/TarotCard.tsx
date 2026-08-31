@@ -17,8 +17,15 @@ interface TarotCardProps {
   phase: CardPhase
   revealed: boolean
   onReveal?: () => void
+  /** Turning a face-up card over for a replacement. Absent until the whole
+      reading is on the table. */
+  onRedraw?: () => void
+  /** Pointer entering or leaving a face-up card, which opens its tooltip. */
+  onHoverChange?: (hovering: boolean) => void
   /** Accessible prompt used while the card is still face down. */
   facedownLabel?: string
+  /** Accessible name once the card is face up and can be redrawn. */
+  faceupLabel?: string
   className?: string
 }
 
@@ -31,7 +38,10 @@ export function TarotCard({
   phase,
   revealed,
   onReveal,
+  onRedraw,
+  onHoverChange,
   facedownLabel,
+  faceupLabel,
   className,
 }: TarotCardProps) {
   const reduced = useReducedMotion()
@@ -39,7 +49,9 @@ export function TarotCard({
   const [burstKey, setBurstKey] = useState(0)
   const revealTimer = useRef<number | undefined>(undefined)
 
-  const interactive = !revealed && phase === 'dealt' && Boolean(card) && Boolean(onReveal)
+  const canTurn = !revealed && phase === 'dealt' && Boolean(card) && Boolean(onReveal)
+  const canRedraw = revealed && phase === 'dealt' && Boolean(card) && Boolean(onRedraw)
+  const interactive = canTurn || canRedraw
   const { rotateX, rotateY, offsetX, offsetY, onPointerMove, reset } = useTilt({
     max: 10,
     disabled: flipping,
@@ -61,8 +73,13 @@ export function TarotCard({
     if (!revealed) setFlipping(false)
   }, [revealed])
 
-  const handleReveal = () => {
-    if (!interactive) return
+  const handleClick = () => {
+    if (canRedraw) {
+      onHoverChange?.(false)
+      onRedraw?.()
+      return
+    }
+    if (!canTurn) return
     reset()
     setFlipping(true)
     setBurstKey((k) => k + 1)
@@ -118,19 +135,31 @@ export function TarotCard({
                   },
             },
           }}
-          whileHover={interactive && !reduced ? { y: -14, scale: 1.03 } : undefined}
+          whileHover={
+            interactive && !reduced ? { y: canRedraw ? -8 : -14, scale: canRedraw ? 1.015 : 1.03 } : undefined
+          }
           onPointerMove={onPointerMove}
-          onPointerLeave={reset}
-          onClick={handleReveal}
+          onClick={handleClick}
+          onPointerEnter={(e) => {
+            if (e.pointerType === 'mouse' && revealed) onHoverChange?.(true)
+          }}
+          onPointerLeave={(e) => {
+            // One handler: the tilt has to reset whatever the pointer type is,
+            // but only a mouse leaving should close the tooltip.
+            reset()
+            if (e.pointerType === 'mouse') onHoverChange?.(false)
+          }}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault()
-              handleReveal()
+              handleClick()
             }
           }}
+          onFocus={() => { if (revealed) onHoverChange?.(true) }}
+          onBlur={() => onHoverChange?.(false)}
           role={interactive ? 'button' : undefined}
           tabIndex={interactive ? 0 : undefined}
-          aria-label={interactive ? facedownLabel : undefined}
+          aria-label={canRedraw ? faceupLabel : canTurn ? facedownLabel : undefined}
         >
           <motion.div className="card-cast" style={{ x: shadowX, y: shadowY }} />
 

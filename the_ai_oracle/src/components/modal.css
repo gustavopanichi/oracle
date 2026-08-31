@@ -1,0 +1,126 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 5vw, 3rem);
+}
+
+.modal-scrim {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklab, var(--ground-edge) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal-panel {
+  position: relative;
+  width: min(42rem, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3.5vw, 3rem);
+  text-align: center;
+  border: 1px solid color-mix(in oklab, var(--highlight) 30%, transparent);
+  border-radius: 5px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, var(--ground-lift) 0%, var(--ground-deep) 68%);
+  box-shadow: 0 40px 100px -30px rgb(2 2 8 / 0.95);
+}
+
+.modal-close {
+  position: absolute;
+  top: clamp(0.7rem, 1.6vw, 1.1rem);
+  right: clamp(0.7rem, 1.6vw, 1.1rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.3s var(--ease-out-soft), background-color 0.3s var(--ease-out-soft);
+}
+
+.modal-close svg { width: 1.05rem; height: 1.05rem; }
+
+.modal-close:focus-visible,
+.modal-close:hover {
+  color: var(--text);
+  background: color-mix(in oklab, var(--highlight) 14%, transparent);
+}
+
+.modal-eyebrow { color: var(--highlight); }
+
+.modal-formula {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.3em;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2.1rem);
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.modal-formula-part {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+}
+
+.modal-formula em {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 0.5em;
+  color: var(--highlight);
+  transform: translateY(-0.2em);
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.6rem;
+  text-align: left;
+}
+
+.modal-interpretation {
+  font-size: clamp(0.95rem, 0.88rem + 0.25vw, 1.08rem);
+  line-height: 1.65;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.modal-example {
+  font-size: clamp(0.88rem, 0.83rem + 0.2vw, 1rem);
+  line-height: 1.6;
+  color: var(--text-muted);
+  text-wrap: pretty;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in oklab, var(--highlight) 16%, transparent);
+}
+
+.modal-example-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--highlight) 66%, var(--ground));
+  margin-bottom: 0.35em;
+}
+
+.modal-loading {
+  color: var(--text-faint);
+  font-style: italic;
+  text-align: center;
+  padding: 1.5rem 0;
+}

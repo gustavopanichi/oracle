@@ -60,9 +60,15 @@
   --stage-pad-top: clamp(5.4rem, 9.5vh, 6.5rem);
   --stage-pad-bottom: clamp(1.5rem, 4vh, 3rem);
   --column-gap: clamp(0.85rem, 2vh, 1.4rem);
+  /* The gaps between the three cards, spread and once drawn together. Named
+     because the reading panel below has to match the row's exact width. */
+  --row-gap: clamp(1.1rem, 3.4vw, 3.6rem);
+  --row-gap-drawn: clamp(0.6rem, 1.6vw, 1.8rem);
+  /* Space under each card for its prompt. Zero wherever there is a pointer to
+     hover with, because there the prompt lives in the card's tooltip instead. */
   --prompt-line: 4.4rem;
   --foot-margin: clamp(0.8rem, 2.2vh, 1.8rem);
-  --foot-reserve: 13rem;
+  --foot-reserve: 12rem;
 
   --stage-overhead: calc(
     var(--stage-pad-top) + var(--column-gap) + var(--prompt-line) +
@@ -91,4 +97,8 @@
 
   /* The frame drawn around the whole experience */
   --frame-inset: clamp(0.6rem, 1.5vw, 1.75rem);
+}
+
+@media (hover: hover) {
+  :root { --prompt-line: 0rem; }
 }

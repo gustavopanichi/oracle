@@ -1,10 +1,10 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { DECKS, type DeckId } from '../data/cards'
 import type { Reading } from '../lib/draw'
 import { TarotCard } from './TarotCard'
-import { CardHelp } from './CardHelp'
-import { CardRedraw } from './CardRedraw'
+import { CardTooltip } from './CardTooltip'
+import { ReadingModal } from './ReadingModal'
 import { ShuffleDeck } from './ShuffleDeck'
 import './stage.css'
 
@@ -31,8 +31,13 @@ export function ReadingStage({
   onRedraw,
   onDrawAgain,
 }: ReadingStageProps) {
+  const [hovered, setHovered] = useState<DeckId | null>(null)
+  const [interpreting, setInterpreting] = useState(false)
   const complete = revealed.length === DECKS.length && !shuffling
   const cardPhase = shuffling ? 'stacked' : 'dealt'
+
+  // Nothing should be left explaining a reading that is no longer on the table.
+  if (interpreting && !complete) setInterpreting(false)
 
   return (
     <section className={['stage', complete ? 'is-complete' : ''].join(' ').trim()}>
@@ -69,8 +74,15 @@ export function ReadingStage({
                   phase={cardPhase}
                   revealed={isUp}
                   onReveal={() => onReveal(deck.id)}
+                  onRedraw={complete && !redrawing ? () => onRedraw(deck.id) : undefined}
+                  onHoverChange={(on) => setHovered(on ? deck.id : null)}
                   facedownLabel={`Turn your ${deck.label.toLowerCase()}. ${deck.question}`}
+                  faceupLabel={`${card.title}. ${card.prompt} Click to draw a different ${deck.label.toLowerCase()} card.`}
                 />
+
+                <AnimatePresence>
+                  {hovered === deck.id && isUp ? <CardTooltip key={card.id} card={card} /> : null}
+                </AnimatePresence>
 
                 {/* The category is printed on the card itself, so all that
                     sits under it is one line: the question guides the choice
@@ -101,14 +113,6 @@ export function ReadingStage({
                           }}
                         >
                           {turned ? card.prompt : deck.question}
-                          {turned ? <CardHelp card={card} /> : null}
-                          {turned && complete ? (
-                            <CardRedraw
-                              label={deck.label}
-                              busy={redrawing !== null}
-                              onRedraw={() => onRedraw(deck.id)}
-                            />
-                          ) : null}
                         </motion.p>
                       ) : null}
                     </AnimatePresence>
@@ -144,7 +148,11 @@ export function ReadingStage({
                 ))}
               </p>
 
+
               <div className="summary-actions">
+                <button type="button" className="btn btn--solid" onClick={() => setInterpreting(true)}>
+                  Interpret it for me
+                </button>
                 <button type="button" className="btn" onClick={onDrawAgain}>
                   Draw again
                 </button>
@@ -153,6 +161,11 @@ export function ReadingStage({
           ) : null}
         </AnimatePresence>
       </div>
+      <AnimatePresence>
+        {interpreting && complete ? (
+          <ReadingModal reading={reading} onClose={() => setInterpreting(false)} />
+        ) : null}
+      </AnimatePresence>
     </section>
   )
 }
