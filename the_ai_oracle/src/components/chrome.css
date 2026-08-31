@@ -24,10 +24,7 @@
 .chrome-wordmark {
   display: flex;
   align-items: center;
-  /* White, like the landing — held back with opacity rather than a duller
-     colour so it stays subordinate to the cards without going grey. */
   color: var(--text);
-  opacity: 0.72;
   cursor: pointer;
   padding: 0.3rem 0.4rem;
   transition: opacity 0.4s var(--ease-out-soft);
@@ -39,10 +36,10 @@
   width: auto;
 }
 
-.chrome-wordmark:focus-visible { opacity: 1; }
+.chrome-wordmark:focus-visible { opacity: 0.72; }
 
 @media (hover: hover) {
-  .chrome-wordmark:hover { opacity: 1; }
+  .chrome-wordmark:hover { opacity: 0.72; }
 }
 
 .sound-toggle {

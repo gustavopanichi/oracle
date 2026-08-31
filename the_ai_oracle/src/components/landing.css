@@ -141,8 +141,8 @@
 
 .landing-mark {
   width: clamp(6rem, 9vw, 9rem);
-  color: var(--highlight);
-  opacity: 0.85;
+  color: var(--text);
+  opacity: 0.8;
   margin-bottom: clamp(0.5rem, 2vh, 1.6rem);
 }
 
@@ -161,7 +161,8 @@
   display: flex;
   justify-content: center;
   color: var(--text);
-  filter: drop-shadow(0 0 60px color-mix(in oklab, var(--highlight) 26%, transparent));
+  /* An ivory halo, not a blue one — the glow should not tint the logotype. */
+  filter: drop-shadow(0 0 60px color-mix(in oklab, var(--text) 24%, transparent));
   will-change: transform;
 }
 
