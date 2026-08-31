@@ -26,8 +26,11 @@
 
 .landing-sky-inner {
   position: absolute;
-  /* Overscanned, so the drift never pulls an edge into view. */
-  inset: -8%;
+  /* Overscanned just enough that the drift never pulls an edge into view.
+     Kept tight on purpose: every extra percent here, and every extra bit of
+     drift scale below, is magnification the source has to pay for in
+     resolution. */
+  inset: -5%;
   will-change: transform;
 }
 
@@ -54,7 +57,10 @@
    coming off it. At this radius it contributes luminance only. */
 .landing-sky-glow {
   mix-blend-mode: screen;
-  opacity: 0.5;
+  /* Low: this is a blurred plate screened over a sharp one, so every point of
+     opacity here is a veil over the detail underneath. Enough to see the
+     light move, not enough to soften the nebula. */
+  opacity: 0.22;
   filter: blur(54px) saturate(1.35);
   animation:
     sky-counter-drift 71s var(--ease-in-out-soft) infinite alternate,
@@ -62,18 +68,18 @@
 }
 
 @keyframes sky-drift {
-  from { transform: scale(1.04) translate3d(-1.4%, 0.7%, 0) rotate(-0.5deg); }
-  to { transform: scale(1.13) translate3d(1.4%, -0.9%, 0) rotate(0.5deg); }
+  from { transform: scale(1) translate3d(-1.2%, 0.6%, 0) rotate(-0.4deg); }
+  to { transform: scale(1.05) translate3d(1.2%, -0.7%, 0) rotate(0.4deg); }
 }
 
 @keyframes sky-counter-drift {
-  from { transform: scale(1.16) translate3d(1.1%, -0.6%, 0) rotate(0.7deg); }
-  to { transform: scale(1.06) translate3d(-1.1%, 0.8%, 0) rotate(-0.7deg); }
+  from { transform: scale(1.06) translate3d(0.9%, -0.5%, 0) rotate(0.6deg); }
+  to { transform: scale(1.01) translate3d(-0.9%, 0.6%, 0) rotate(-0.6deg); }
 }
 
 @keyframes sky-breathe {
-  0%, 100% { opacity: 0.34; }
-  50% { opacity: 0.62; }
+  0%, 100% { opacity: 0.13; }
+  50% { opacity: 0.26; }
 }
 
 /* --- Smudge ---------------------------------------------------------------
@@ -130,7 +136,7 @@
 @media (prefers-reduced-motion: reduce) {
   .landing-sky-plate,
   .landing-sky-glow { animation: none; }
-  .landing-sky-glow { opacity: 0.34; }
+  .landing-sky-glow { opacity: 0.18; }
 }
 
 .landing-mark {
