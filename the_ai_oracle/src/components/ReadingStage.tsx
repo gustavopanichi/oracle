@@ -132,10 +132,10 @@ export function ReadingStage({
             >
               <div className="summary-hints">
                 {hasHover ? (
-                  <p className="summary-hint">Hover a card to see what it is asking for</p>
+                  <p className="summary-hint">Hover a card for a quick insight.</p>
                 ) : null}
                 <p className="summary-hint">
-                  {hasHover ? 'Click' : 'Tap'} a card to draw a different one
+                  {hasHover ? 'Click' : 'Tap'} a card to draw a different one.
                 </p>
               </div>
 
