@@ -105,8 +105,8 @@
   pointer-events: none;
   background: radial-gradient(
     circle at 50% 50%,
-    rgb(255 255 255 / 0.5) 0%,
-    rgb(255 255 255 / 0.13) 32%,
+    rgb(244 244 240 / 0.5) 0%,
+    rgb(244 244 240 / 0.13) 32%,
     transparent 62%
   );
   mix-blend-mode: soft-light;
@@ -291,14 +291,6 @@
 
 /* Sized off the card's width like everything else on it, so the reading holds
    its proportions from a 218px card up to a 400px one. */
-.card-read-lede {
-  font-family: var(--font-display);
-  font-size: calc(var(--card-w) * 0.058);
-  line-height: 1.15;
-  text-transform: uppercase;
-  color: var(--card-umber);
-}
-
 .card-read-detail {
   font-size: calc(var(--card-w) * 0.045);
   line-height: 1.42;

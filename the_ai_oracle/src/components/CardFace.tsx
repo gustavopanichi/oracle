@@ -66,8 +66,12 @@ export function CardFace({ card, drawing, peeking = false }: CardFaceProps) {
             </div>
 
             <div className="card-window-face card-window-face--read">
-              {lede ? <p className="card-read-lede">{lede}</p> : null}
-              <p className="card-read-detail">{card.detail}</p>
+              {/* The prompt opens the paragraph rather than heading it — one
+                  block of prose, not a title and a body. */}
+              <p className="card-read-detail">
+                {lede ? `${lede} ` : ''}
+                {card.detail}
+              </p>
               <p className="card-read-example">
                 <span className="card-read-label">For example</span>
                 {card.example}
