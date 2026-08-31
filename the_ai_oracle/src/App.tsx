@@ -8,6 +8,7 @@ import { Atmosphere } from './components/Atmosphere'
 import { Frame } from './components/Frame'
 import { Landing } from './components/Landing'
 import { ReadingStage } from './components/ReadingStage'
+import { Logo } from './components/Logo'
 import { SoundToggle } from './components/SoundToggle'
 import { Gallery } from './components/Gallery'
 import './components/chrome.css'
@@ -146,7 +147,7 @@ export default function App() {
               onClick={restart}
               aria-label="Return to the start"
             >
-              The Deck
+              <Logo className="chrome-logo" />
             </button>
           )}
         </div>

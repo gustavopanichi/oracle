@@ -31,15 +31,18 @@
 @keyframes landing-turn { to { transform: rotate(360deg); } }
 
 .landing-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(2.7rem, 10.5vw, 9rem);
-  line-height: 0.98;
-  letter-spacing: 0;
-  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
   color: var(--text);
-  text-shadow: 0 0 80px color-mix(in oklab, var(--highlight) 22%, transparent);
+  filter: drop-shadow(0 0 60px color-mix(in oklab, var(--highlight) 26%, transparent));
   will-change: transform;
+}
+
+/* The logotype is 368 x 75.5, so height follows from the width. */
+.landing-logo {
+  display: block;
+  width: clamp(15rem, 42vw, 34rem);
+  height: auto;
 }
 
 .landing-action { margin-top: clamp(1.6rem, 4.5vh, 3.4rem); }

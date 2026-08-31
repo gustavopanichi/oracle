@@ -152,6 +152,7 @@ logic can be exercised from the console without a test harness.
 | Highlight | `#C0D8FF` — linework, labels, the `×` separators, the frame |
 | Cards | `#F4F4F0` paper, `#7E5735` umber linework and titles, `#858580` stone for secondary text |
 | Card back | A printed image, `src/assets/card-back.jpg`, shown on all three cards |
+| Logotype | `Logo.tsx`, traced from `thedecklogo.svg` — the landing hero and the header mark |
 | Display | Instrument Serif — titles, card type and the reading |
 | Body | Inter Regular, with Bold available for emphasis |
 

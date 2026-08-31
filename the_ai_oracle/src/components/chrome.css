@@ -20,22 +20,29 @@
 
 .chrome-slot > * { pointer-events: auto; }
 
-/* The title, carried through from the landing at reading scale. */
+/* The logotype, carried through from the landing at reading scale. */
 .chrome-wordmark {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.05rem, 0.85rem + 0.6vw, 1.6rem);
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  /* White, like the landing — held back with opacity rather than a duller
+     colour so it stays subordinate to the cards without going grey. */
+  color: var(--text);
+  opacity: 0.72;
   cursor: pointer;
-  padding: 0.2em 0.4em;
-  transition: color 0.4s var(--ease-out-soft);
+  padding: 0.3rem 0.4rem;
+  transition: opacity 0.4s var(--ease-out-soft);
 }
 
+.chrome-logo {
+  display: block;
+  height: clamp(0.95rem, 0.75rem + 0.55vw, 1.4rem);
+  width: auto;
+}
+
+.chrome-wordmark:focus-visible { opacity: 1; }
+
 @media (hover: hover) {
-  .chrome-wordmark:hover { color: var(--text); }
+  .chrome-wordmark:hover { opacity: 1; }
 }
 
 .sound-toggle {

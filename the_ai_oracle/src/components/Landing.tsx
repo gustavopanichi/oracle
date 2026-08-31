@@ -1,5 +1,6 @@
 import { motion, useTransform, useReducedMotion } from 'framer-motion'
 import type { PointerField } from '../hooks/usePointerField'
+import { Logo } from './Logo'
 import './landing.css'
 
 interface LandingProps {
@@ -44,7 +45,7 @@ export function Landing({ pointer, onBegin }: LandingProps) {
       </motion.div>
 
       <motion.h1 className="landing-title" variants={rise} style={{ x: titleX, y: titleY }}>
-        The Deck
+        <Logo className="landing-logo" />
       </motion.h1>
 
       <motion.div variants={rise} className="landing-action">
