@@ -5,7 +5,8 @@
   margin-left: 0.4em;
 }
 
-.help-dot {
+.help-dot,
+.redraw-dot {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -25,15 +26,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* The dot is small by design; this gives it a finger-sized target without
-   changing how big it looks. */
-.help-dot::before {
+/* The dots are small by design; this gives each a finger-sized target without
+   changing how big it looks. Generous vertically, tighter horizontally: they
+   sit a few px apart, and symmetrical padding would overlap so the right edge
+   of the help dot fired a redraw instead. */
+.help-dot::before,
+.redraw-dot::before {
   content: '';
   position: absolute;
-  inset: -13px;
+  inset: -15px -7px;
 }
 
 .help-dot:focus-visible,
+.redraw-dot:focus-visible,
 .help-dot[aria-expanded='true'] {
   color: var(--ground);
   background: var(--highlight);
@@ -41,7 +46,8 @@
 }
 
 @media (hover: hover) {
-  .help-dot:hover {
+  .help-dot:hover,
+  .redraw-dot:enabled:hover {
     color: var(--ground);
     background: var(--highlight);
     border-color: var(--highlight);
@@ -135,4 +141,36 @@
   }
 
   .help-tip::after { display: none; }
+}
+
+/* --- Redraw ---------------------------------------------------------------
+   Same dot as the help affordance, so the two read as a pair rather than as
+   two unrelated controls. */
+.redraw-dot {
+  margin-left: 0.8em;
+  cursor: pointer;
+}
+
+.redraw-dot svg {
+  width: 0.82em;
+  height: 0.82em;
+}
+
+.redraw-dot:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* One turn of the glyph as the card goes back down — the button acknowledges
+   the press even though the card is what actually moves. */
+.redraw-dot:enabled:active svg {
+  animation: redraw-turn 0.6s var(--ease-out-soft);
+}
+
+@keyframes redraw-turn {
+  to { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .redraw-dot:enabled:active svg { animation: none; }
 }

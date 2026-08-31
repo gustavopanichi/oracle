@@ -1,8 +1,10 @@
+import { Fragment } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { DECKS, type DeckId } from '../data/cards'
 import type { Reading } from '../lib/draw'
 import { TarotCard } from './TarotCard'
 import { CardHelp } from './CardHelp'
+import { CardRedraw } from './CardRedraw'
 import { ShuffleDeck } from './ShuffleDeck'
 import './stage.css'
 
@@ -12,7 +14,10 @@ interface ReadingStageProps {
   shuffling: boolean
   /** True once the deal has finished and the cards are lying on the table. */
   dealt: boolean
+  /** The one position currently being replaced, if any. */
+  redrawing: DeckId | null
   onReveal: (deck: DeckId) => void
+  onRedraw: (deck: DeckId) => void
   onDrawAgain: () => void
 }
 
@@ -21,7 +26,9 @@ export function ReadingStage({
   revealed,
   shuffling,
   dealt,
+  redrawing,
   onReveal,
+  onRedraw,
   onDrawAgain,
 }: ReadingStageProps) {
   const complete = revealed.length === DECKS.length && !shuffling
@@ -47,7 +54,12 @@ export function ReadingStage({
         <div className="table-row">
           {DECKS.map((deck, i) => {
             const card = reading[deck.id]
-            const isUp = revealed.includes(deck.id)
+            const pending = redrawing === deck.id
+            const turned = revealed.includes(deck.id)
+            // Face-down for the moment it takes to swap, but still "revealed"
+            // as far as the layout is concerned — otherwise the spread would
+            // expand and snap back around a single card.
+            const isUp = turned && !pending
 
             return (
               <div className="column" key={deck.id}>
@@ -70,7 +82,12 @@ export function ReadingStage({
                     <AnimatePresence mode="wait">
                       {dealt ? (
                         <motion.p
-                          key={isUp ? card.id : 'question'}
+                          /* Keyed on the card, not on whether it is currently
+                             face-up: through a redraw the line holds the old
+                             prompt and crossfades when the new card is swapped
+                             in, which lands as the card turns back over. A
+                             placeholder here only ever flashed. */
+                          key={turned ? card.id : 'question'}
                           className="column-line-text"
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -79,12 +96,19 @@ export function ReadingStage({
                             duration: 0.42,
                             /* On the first showing, wait for the last card to
                                land before the questions arrive. */
-                            delay: isUp ? 0 : 0.3 + i * 0.09,
+                            delay: turned ? 0 : 0.3 + i * 0.09,
                             ease: [0.22, 1, 0.36, 1],
                           }}
                         >
-                          {isUp ? card.prompt : deck.question}
-                          {isUp ? <CardHelp card={card} /> : null}
+                          {turned ? card.prompt : deck.question}
+                          {turned ? <CardHelp card={card} /> : null}
+                          {turned && complete ? (
+                            <CardRedraw
+                              label={deck.label}
+                              busy={redrawing !== null}
+                              onRedraw={() => onRedraw(deck.id)}
+                            />
+                          ) : null}
                         </motion.p>
                       ) : null}
                     </AnimatePresence>
@@ -110,11 +134,14 @@ export function ReadingStage({
               <p className="summary-eyebrow meta">Your reading</p>
 
               <p className="summary-formula">
-                <span>{reading.focus.title}</span>
-                <em aria-hidden="true">×</em>
-                <span>{reading.goal.title}</span>
-                <em aria-hidden="true">×</em>
-                <span>{reading.twist.title}</span>
+                {DECKS.map((deck, i) => (
+                  <Fragment key={deck.id}>
+                    {i > 0 ? <em aria-hidden="true">×</em> : null}
+                    <span className={redrawing === deck.id ? 'is-pending' : undefined}>
+                      {reading[deck.id].title}
+                    </span>
+                  </Fragment>
+                ))}
               </p>
 
               <div className="summary-actions">

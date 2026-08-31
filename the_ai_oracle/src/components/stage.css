@@ -72,6 +72,13 @@
   min-height: var(--prompt-line);
 }
 
+/* The term whose card is mid-redraw steps back rather than announcing its
+   replacement before the card has turned. */
+.summary-formula .is-pending {
+  opacity: 0.32;
+  transition: opacity 0.3s var(--ease-out-soft);
+}
+
 .column-line-text {
   position: absolute;
   inset: 0;
@@ -162,7 +169,14 @@
   }
 
   .column-line { min-height: auto; }
-  .column-line-text { position: static; }
+  /* The term whose card is mid-redraw steps back rather than announcing its
+   replacement before the card has turned. */
+.summary-formula .is-pending {
+  opacity: 0.32;
+  transition: opacity 0.3s var(--ease-out-soft);
+}
+
+.column-line-text { position: static; }
 
   .summary-formula {
     flex-wrap: wrap;

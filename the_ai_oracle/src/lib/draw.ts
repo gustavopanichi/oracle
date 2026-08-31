@@ -81,6 +81,24 @@ export function drawReading(memory: Memory, previous?: Reading | null): DrawResu
 }
 
 /**
+ * Replace a single position, leaving the other two exactly as they are.
+ *
+ * The card being replaced heads the exclusion list, so it is the last thing
+ * relaxed if the deck is too small to honour everything — a redraw that hands
+ * back the same card would read as a broken button.
+ */
+export function redrawCard(deck: DeckId, reading: Reading, memory: Memory): DrawResult {
+  const current = reading[deck].id
+  const avoid = [current, ...memory[deck].filter((id) => id !== current)]
+  const card = pickFromDeck(deck, avoid)
+
+  return {
+    reading: { ...reading, [deck]: card },
+    memory: remember(memory, deck, card.id),
+  }
+}
+
+/**
  * Fisher–Yates on a copy. Used by the shuffle animation to reorder the deck
  * sprites so the motion reads as a genuine riffle rather than a loop.
  */
@@ -98,6 +116,7 @@ export function shuffled<T>(items: T[]): T[] {
 if (import.meta.env.DEV) {
   ;(window as unknown as Record<string, unknown>).__oracle = {
     drawReading,
+    redrawCard,
     emptyMemory,
     readingKey,
   }

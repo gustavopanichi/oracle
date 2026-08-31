@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { DeckId } from './data/cards'
-import { drawReading, emptyMemory, type Reading } from './lib/draw'
+import { drawReading, redrawCard, emptyMemory, type Reading } from './lib/draw'
 import { sound } from './lib/sound'
 import { usePointerField } from './hooks/usePointerField'
 import { Atmosphere } from './components/Atmosphere'
@@ -18,6 +18,9 @@ type Stage = 'landing' | 'shuffling' | 'drawing'
    takes 700ms to dissolve, so the deck is not on the table before then. */
 const OPENING = { shuffleSound: 720, deal: 1900 }
 const REDRAW = { flipBack: 520, shuffle: 560, deal: 1780 }
+/* Replacing one card: it turns face-down, the new card is swapped in behind
+   it, and it turns back. The swap has to land while the face is hidden. */
+const REDRAW_ONE = { swap: 560, turn: 640, chime: 1020 }
 
 const SHOW_GALLERY =
   import.meta.env.DEV && typeof window !== 'undefined' && window.location.search.includes('gallery')
@@ -29,6 +32,7 @@ export default function App() {
   const [memory, setMemory] = useState(emptyMemory)
   const [reading, setReading] = useState<Reading | null>(null)
   const [revealed, setRevealed] = useState<DeckId[]>([])
+  const [redrawing, setRedrawing] = useState<DeckId | null>(null)
 
   const timers = useRef<number[]>([])
   const after = useCallback((ms: number, fn: () => void) => {
@@ -71,12 +75,32 @@ export default function App() {
     return () => window.clearTimeout(timer)
   }, [revealed.length, stage])
 
+  const redrawOne = useCallback(
+    (deck: DeckId) => {
+      if (stage !== 'drawing' || redrawing || !reading) return
+      clearTimers()
+
+      setRedrawing(deck)
+      sound.flip()
+
+      after(REDRAW_ONE.swap, () => {
+        const drawn = redrawCard(deck, reading, memory)
+        setReading(drawn.reading)
+        setMemory(drawn.memory)
+      })
+      after(REDRAW_ONE.turn, () => setRedrawing(null))
+      after(REDRAW_ONE.chime, () => sound.reveal())
+    },
+    [after, clearTimers, memory, reading, redrawing, stage],
+  )
+
   const drawAgain = useCallback(() => {
     if (stage !== 'drawing') return
     clearTimers()
 
     // The three on the table turn face-down first, then gather to the centre.
     const previous = reading
+    setRedrawing(null)
     setRevealed([])
 
     after(REDRAW.flipBack, () => setStage('shuffling'))
@@ -94,6 +118,7 @@ export default function App() {
     clearTimers()
     setStage('landing')
     setRevealed([])
+    setRedrawing(null)
   }, [clearTimers])
 
   const complete = revealed.length === 3 && stage === 'drawing'
@@ -146,7 +171,9 @@ export default function App() {
               revealed={revealed}
               shuffling={stage === 'shuffling'}
               dealt={stage === 'drawing'}
+              redrawing={redrawing}
               onReveal={reveal}
+              onRedraw={redrawOne}
               onDrawAgain={drawAgain}
             />
           </motion.div>
