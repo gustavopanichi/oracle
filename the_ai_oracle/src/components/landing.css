@@ -46,11 +46,16 @@
   animation: sky-drift 52s var(--ease-in-out-soft) infinite alternate;
 }
 
-/* Screened back over itself on a slower, opposite path. The two sets of
-   filaments slide across each other and the overlaps brighten and dim. */
+/* Screened back over itself on a slower, opposite path, to make the light
+   swell and fade.
+
+   Blurred hard, and that is the whole point: unblurred, the offset copy keeps
+   its filaments legible and you see a ghost of the nebula rather than light
+   coming off it. At this radius it contributes luminance only. */
 .landing-sky-glow {
   mix-blend-mode: screen;
-  opacity: 0.42;
+  opacity: 0.5;
+  filter: blur(54px) saturate(1.35);
   animation:
     sky-counter-drift 71s var(--ease-in-out-soft) infinite alternate,
     sky-breathe 17s var(--ease-in-out-soft) infinite;
@@ -67,8 +72,8 @@
 }
 
 @keyframes sky-breathe {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.56; }
+  0%, 100% { opacity: 0.34; }
+  50% { opacity: 0.62; }
 }
 
 /* --- Smudge ---------------------------------------------------------------
@@ -106,7 +111,9 @@
   /* Displaced from the plate underneath: blurred, turned, and pushed off
      centre, so the window never lines up with what it covers. */
   transform: scale(1.1) rotate(1.6deg) translate3d(1.2%, -1%, 0);
-  filter: blur(7px) saturate(1.5) brightness(1.2);
+  /* Same reasoning as the glow: enough blur that the displaced copy reads as
+     smeared light and never resolves into a recognisable second nebula. */
+  filter: blur(26px) saturate(1.55) brightness(1.25);
 }
 
 /* Holds the middle of the frame back so the logotype and the button stay
