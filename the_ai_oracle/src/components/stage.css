@@ -116,20 +116,22 @@
   text-align: center;
 }
 
-/* Two quiet lines telling you what the cards themselves do. Small, and set
-   back, so they read as instructions rather than as part of the reading. */
+/* One quiet line telling you what the cards themselves do. Small, and set
+   back, so it reads as instruction rather than as part of the reading. */
 .summary-hints {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 0.4em;
 }
 
 .summary-hint {
   font-size: clamp(0.78rem, 0.73rem + 0.16vw, 0.9rem);
   line-height: 1.5;
-  /* Muted rather than faint: these have to survive a projector at the back of
+  /* Muted rather than faint: this has to survive a projector at the back of
      a room, where --text-faint disappears into the cloth. */
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .summary-actions {
