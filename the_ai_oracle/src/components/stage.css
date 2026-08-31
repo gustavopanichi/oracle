@@ -79,11 +79,6 @@
 
 /* The term whose card is mid-redraw steps back rather than announcing its
    replacement before the card has turned. */
-.summary-formula .is-pending {
-  opacity: 0.32;
-  transition: opacity 0.3s var(--ease-out-soft);
-}
-
 .column-line-text {
   position: absolute;
   inset: 0;
@@ -121,37 +116,20 @@
   text-align: center;
 }
 
-.summary-eyebrow { color: var(--text); }
-
-.summary-formula {
-  /* One line, always. Three long titles plus their separators run to about
-     39em of this face, so the size is taken from the viewport rather than
-     capped in rem — that is what keeps the longest combination in the deck
-     from wrapping. */
+/* Two quiet lines telling you what the cards themselves do. Small, and set
+   back, so they read as instructions rather than as part of the reading. */
+.summary-hints {
   display: flex;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.4em;
-  max-width: 100%;
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: min(2.4vw, 2.6rem);
-  line-height: 1.12;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: var(--text);
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
-.summary-formula em {
-  font-family: var(--font-body);
-  font-style: normal;
-  font-size: 0.5em;
-  /* The same ivory as the titles it separates, stepped back so it reads as
-     punctuation rather than as a third word. */
-  color: color-mix(in oklab, var(--text) 58%, var(--ground));
-  transform: translateY(-0.2em);
+.summary-hint {
+  font-size: clamp(0.78rem, 0.73rem + 0.16vw, 0.9rem);
+  line-height: 1.5;
+  /* Muted rather than faint: these have to survive a projector at the back of
+     a room, where --text-faint disappears into the cloth. */
+  color: var(--text-muted);
 }
 
 .summary-actions {
@@ -178,20 +156,8 @@
   .column-line { min-height: auto; }
   /* The term whose card is mid-redraw steps back rather than announcing its
    replacement before the card has turned. */
-.summary-formula .is-pending {
-  opacity: 0.32;
-  transition: opacity 0.3s var(--ease-out-soft);
-}
-
 .column-line-text { position: static; }
 
-  .summary-formula {
-    flex-wrap: wrap;
-    white-space: normal;
-    font-size: clamp(1.3rem, 6.4vw, 2rem);
-    max-width: 18em;
-    text-wrap: balance;
-  }
-  .stage-foot, .stage.is-complete .stage-foot { min-height: auto; }
+    .stage-foot, .stage.is-complete .stage-foot { min-height: auto; }
   .summary { position: static; }
 }

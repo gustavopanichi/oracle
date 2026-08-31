@@ -1,9 +1,10 @@
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { DECKS, type DeckId } from '../data/cards'
 import type { Reading } from '../lib/draw'
 import { TarotCard } from './TarotCard'
 import { ReadingModal } from './ReadingModal'
+import { useHasHover } from '../hooks/useHasHover'
 import { ShuffleDeck } from './ShuffleDeck'
 import './stage.css'
 
@@ -31,6 +32,7 @@ export function ReadingStage({
   onDrawAgain,
 }: ReadingStageProps) {
   const [interpreting, setInterpreting] = useState(false)
+  const hasHover = useHasHover()
   const complete = revealed.length === DECKS.length && !shuffling
   const cardPhase = shuffling ? 'stacked' : 'dealt'
 
@@ -128,18 +130,14 @@ export function ReadingStage({
               exit={{ opacity: 0, y: 14, transition: { duration: 0.3 } }}
               transition={{ duration: 0.75, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className="summary-eyebrow meta">Your reading</p>
-
-              <p className="summary-formula">
-                {DECKS.map((deck, i) => (
-                  <Fragment key={deck.id}>
-                    {i > 0 ? <em aria-hidden="true">×</em> : null}
-                    <span className={redrawing === deck.id ? 'is-pending' : undefined}>
-                      {reading[deck.id].title}
-                    </span>
-                  </Fragment>
-                ))}
-              </p>
+              <div className="summary-hints">
+                {hasHover ? (
+                  <p className="summary-hint">Hover a card to see what it is asking for</p>
+                ) : null}
+                <p className="summary-hint">
+                  {hasHover ? 'Click' : 'Tap'} a card to draw a different one
+                </p>
+              </div>
 
 
               <div className="summary-actions">

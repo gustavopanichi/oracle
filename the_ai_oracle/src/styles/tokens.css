@@ -68,7 +68,7 @@
      hover with, because there the prompt lives in the card's tooltip instead. */
   --prompt-line: 4.4rem;
   --foot-margin: clamp(0.8rem, 2.2vh, 1.8rem);
-  --foot-reserve: 12rem;
+  --foot-reserve: 8.5rem;
 
   --stage-overhead: calc(
     var(--stage-pad-top) + var(--column-gap) + var(--prompt-line) +
